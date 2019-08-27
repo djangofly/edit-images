@@ -70,7 +70,7 @@ function fileDisplay(filePath){
                                 //等比缩放图像到400像素宽
                                 //.draw(images("logo.png"), 10, 10)   //Drawn logo at coordinates (10,10)
                                 //在(10,10)处绘制Logo
-                                .save(filedir, {                      //Save the image to a file, with the quality of 50
+                                .save(distPosition+'/'+filename, {    //Save the image to a file, with the quality of 50
                                 quality : 50                          //保存图片到文件,图片质量为50
                             });
                         }
