@@ -1,0 +1,16 @@
+{
+  "name": "edit-images",
+  "version": "1.0.0",
+  "description": "图片处理",
+  "main": "index.js",
+  "author": "nian",
+  "license": "ISC",
+  "scripts": {
+    "build": "node index.js"
+  },
+  "devDependencies": {
+    "fs": "*",
+    "images": "^3.0.2",
+    "path": "*"
+  }
+}
