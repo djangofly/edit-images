@@ -1,7 +1,7 @@
 var images = require("images");
 var fs = require("fs");     //fs核心模块中提供了一个  fs.readFile方法,来读取指定目录下的文件
 var path = require('path');//解析需要遍历的文件夹
-var filePath = path.resolve('./pre-processing-images');
+var filePath = path.resolve('./0/[伊藤潤二X佐藤優][憂國的拉斯普金][東立]Vol.1');
 var distPosition = path.resolve('./dist/images/');
 
 //递归创建目录 异步方法  
@@ -50,7 +50,7 @@ function fileDisplay(filePath){
         }else{
             //遍历读取到的文件列表
             files.forEach(function(filename){
-                console.log(filename);
+                //console.log(filename);
                 //获取当前文件的绝对路径
                 var filedir = path.join(filePath, filename);
                 //根据文件路径获取文件信息，返回一个fs.Stats对象
@@ -66,13 +66,26 @@ function fileDisplay(filePath){
 　　　　　　　　　　　　　　　　　// 读取文件内容
                             images(filedir)                           //Load image from file 
                                 //加载图像文件
-                                .size(400)                            //Geometric scaling the image to 400 pixels width
+                                .size(2400)                            //Geometric scaling the image to 400 pixels width
                                 //等比缩放图像到400像素宽
                                 //.draw(images("logo.png"), 10, 10)   //Drawn logo at coordinates (10,10)
                                 //在(10,10)处绘制Logo
                                 .save(distPosition+'/'+filename, {    //Save the image to a file, with the quality of 50
-                                quality : 50                          //保存图片到文件,图片质量为50
+                                quality : 80                          //保存图片到文件,图片质量为50
                             });
+                        }else if(isFile && /\.png$/.test(filename)){
+                            console.log(filedir,"是以.png结尾的文件");
+                            var jpgfile = images(filedir)                           //Load image from file 
+                                .encode("jpg", {operation:80});
+                                images(jpgfile)  
+                                //加载图像文件
+                                .size(2400)                            //Geometric scaling the image to 400 pixels width
+                                //等比缩放图像到400像素宽
+                                //.draw(images("logo.png"), 10, 10)   //Drawn logo at coordinates (10,10)
+                                //在(10,10)处绘制Logo
+                                .save(distPosition+'/'+filename+'.jpg', {    //Save the image to a file, with the quality of 50
+                                    quality : 80                          //保存图片到文件,图片质量为50
+                                });
                         }
                         if(isDir){
                             fileDisplay(filedir);//递归，如果是文件夹，就继续遍历该文件夹下面的文件
