@@ -75,8 +75,7 @@ function fileDisplay(filePath){
                             });
                         }else if(isFile && /\.png$/.test(filename)){
                             console.log(filedir,"是以.png结尾的文件");
-                            var jpgfile = images(filedir)                           //Load image from file 
-                                .encode("jpg", {operation:80});
+                            var jpgfile = images(filedir).encode("jpg", {operation:80});        //Load image from file 
                                 images(jpgfile)  
                                 //加载图像文件
                                 .size(2400)                            //Geometric scaling the image to 400 pixels width
@@ -96,3 +95,12 @@ function fileDisplay(filePath){
         }
     });
 }
+
+//img buffer
+// function longImgCut( img ){
+//     console.log( images(filedir).size() );
+
+//     images(images(filedir),200,200,500,500)
+//         //.resize(100)
+//         .save(distPosition+'/dist.jpg');
+// }
