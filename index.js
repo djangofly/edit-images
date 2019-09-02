@@ -31,6 +31,47 @@ function mkdirsSync(dirname) {
     }  
 }  
 
+var i = 0;
+/**
+ * 将图片流左右切割 并返回
+ * @param {*} img 
+ * @param {*} leftName 
+ * @param {*} rightName
+ */
+function longImgCut( img ){
+    var width = img.size().width;
+    var height = img.size().height;
+
+    var imgLeftCut = images(img, 0, 0, width/2, height);
+    var imgRightCut = images(img, (width/2+1), 0, width/2, height);
+
+    return {
+        left: imgLeftCut,
+        right: imgRightCut
+    };
+}
+
+/**
+ * 
+ * @param {buffer} img 图片流
+ * @param {number} width 保存宽度
+ * @param {number} quality 保存图片质量
+ * @param {string} position 保存位置及文件名 './dist/images/a.jpg'
+ */
+function distPic( img, width, quality, position ){
+    if(!quality) quality = 100;
+    images(img)                           //Load image from file 
+        //加载图像文件
+        .size(width)                            //Geometric scaling the image to 400 pixels width
+        //等比缩放图像到400像素宽
+        //.draw(images("logo.png"), 10, 10)   //Drawn logo at coordinates (10,10)
+        //在(10,10)处绘制Logo
+        .save(position, {    //Save the image to a file, with the quality of 50
+        quality : quality                          //保存图片到文件,图片质量为50
+    });
+}
+  
+
 
 
 mkdirsSync(distPosition , null);  
@@ -49,7 +90,7 @@ function fileDisplay(filePath){
             console.warn(err)
         }else{
             //遍历读取到的文件列表
-            files.forEach(function(filename){
+            files.forEach(function(filename,index){
                 //console.log(filename);
                 //获取当前文件的绝对路径
                 var filedir = path.join(filePath, filename);
@@ -60,31 +101,25 @@ function fileDisplay(filePath){
                     }else{
                         var isFile = stats.isFile();//是文件
                         var isDir = stats.isDirectory();//是文件夹
-                        //是以.jpg结尾的文件
-                        if(isFile && /\.jpg$/.test(filename)){
-                            console.log(filedir,"是以.jpg结尾的文件");
+
+                        if(isFile && /\.jpg$/.test(filename)){ //是以.jpg结尾的文件
+
+                            var imgCut = longImgCut(images(filedir));
+
 　　　　　　　　　　　　　　　　　// 读取文件内容
-                            images(filedir)                           //Load image from file 
-                                //加载图像文件
-                                .size(2400)                            //Geometric scaling the image to 400 pixels width
-                                //等比缩放图像到400像素宽
-                                //.draw(images("logo.png"), 10, 10)   //Drawn logo at coordinates (10,10)
-                                //在(10,10)处绘制Logo
-                                .save(distPosition+'/'+filename, {    //Save the image to a file, with the quality of 50
-                                quality : 80                          //保存图片到文件,图片质量为50
-                            });
-                        }else if(isFile && /\.png$/.test(filename)){
-                            console.log(filedir,"是以.png结尾的文件");
-                            var jpgfile = images(filedir).encode("jpg", {operation:80});        //Load image from file 
-                                images(jpgfile)  
-                                //加载图像文件
-                                .size(2400)                            //Geometric scaling the image to 400 pixels width
-                                //等比缩放图像到400像素宽
-                                //.draw(images("logo.png"), 10, 10)   //Drawn logo at coordinates (10,10)
-                                //在(10,10)处绘制Logo
-                                .save(distPosition+'/'+filename+'.jpg', {    //Save the image to a file, with the quality of 50
-                                    quality : 80                          //保存图片到文件,图片质量为50
-                                });
+
+                        // }else if(isFile && /\.png$/.test(filename)){
+                        //     console.log(filedir,"是以.png结尾的文件");
+                        //     var jpgfile = images(filedir).encode("jpg", {operation:80});        //Load image from file 
+                        //         images(jpgfile)  
+                        //         //加载图像文件
+                        //         .size(2400)                            //Geometric scaling the image to 400 pixels width
+                        //         //等比缩放图像到400像素宽
+                        //         //.draw(images("logo.png"), 10, 10)   //Drawn logo at coordinates (10,10)
+                        //         //在(10,10)处绘制Logo
+                        //         .save(distPosition+'/'+filename+'.jpg', {    //Save the image to a file, with the quality of 50
+                        //             quality : 80                          //保存图片到文件,图片质量为50
+                        //         });
                         }
                         if(isDir){
                             fileDisplay(filedir);//递归，如果是文件夹，就继续遍历该文件夹下面的文件
@@ -96,11 +131,3 @@ function fileDisplay(filePath){
     });
 }
 
-//img buffer
-// function longImgCut( img ){
-//     console.log( images(filedir).size() );
-
-//     images(images(filedir),200,200,500,500)
-//         //.resize(100)
-//         .save(distPosition+'/dist.jpg');
-// }
