@@ -4,32 +4,39 @@ var path = require('path');//解析需要遍历的文件夹
 var filePath = path.resolve('./0/[伊藤潤二X佐藤優][憂國的拉斯普金][東立]Vol.1');
 var distPosition = path.resolve('./dist/images/');
 
-//递归创建目录 异步方法  
-function mkdirs(dirname, callback) {  
-    fs.exists(dirname, function (exists) {  
-        if (exists) {  
-            callback();  
-        } else {  
-            //console.log(path.dirname(dirname));  
-            mkdirs(path.dirname(dirname), function () {  
-                fs.mkdir(dirname, callback);  
-            });  
-        }  
-    });  
-}  
-
-//递归创建目录 同步方法  
-function mkdirsSync(dirname) {  
-    //console.log(dirname);  
-    if (fs.existsSync(dirname)) {  
-        return true;  
-    } else {  
-        if (mkdirsSync(path.dirname(dirname))) {  
-            fs.mkdirSync(dirname);  
+/**
+ * 递归创建目录
+ * @param {String} dirname 
+ * @param {bollon} sync 
+ * @param {function} callback 
+ * 
+ */
+var mkdirs = function(dirname,sync,callback){
+    if(!callback){
+        var callback = function(){}
+    } 
+    if(sync){ //同步方式创建 
+        if (fs.existsSync(dirname)) {  
             return true;  
+        } else {  
+            if (mkdirs(path.dirname(dirname),false)) {  
+                fs.mkdirSync(dirname);  
+                return true;  
+            }  
         }  
-    }  
-}  
+    }else{ //异步创建 默认
+        fs.exists(dirname, function (exists) {  
+            if (exists) {  
+                callback();  
+            } else {  
+                //console.log(path.dirname(dirname));  
+                mkdirs(path.dirname(dirname), function () {  
+                    fs.mkdir(dirname, callback);  
+                });  
+            }  
+        });
+    }
+}
 
 var i = 0;
 /**
@@ -70,15 +77,8 @@ function distPic( img, width, quality, position ){
         quality : quality                          //保存图片到文件,图片质量为50
     });
 }
-  
 
-
-
-mkdirsSync(distPosition , null);  
-// mkdirs( distPosition , function(e) {  
-//    console.log("目录创建完毕")  
-// });  
-
+mkdirs(distPosition , false);  
 
 //调用文件遍历方法
 fileDisplay(filePath);
@@ -105,8 +105,7 @@ function fileDisplay(filePath){
                         if(isFile && /\.jpg$/.test(filename)){ //是以.jpg结尾的文件
 
                             var imgCut = longImgCut(images(filedir));
-
-　　　　　　　　　　　　　　　　　// 读取文件内容
+                            imgCut.left.save(distPosition+'/'+filename+'.jpg');
 
                         // }else if(isFile && /\.png$/.test(filename)){
                         //     console.log(filedir,"是以.png结尾的文件");
